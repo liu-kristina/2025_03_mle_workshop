@@ -8,17 +8,14 @@ import pandas as pd
 # import matplotlib.pyplot as plt
 import pickle
 #import argparse
-
+import click
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.pipeline import make_pipeline
-import click
 import logging 
-
 logging.basicConfig(level=logging.INFO, format = "%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
-
 
 def read_dataframe(filename):
     """
@@ -47,7 +44,6 @@ def read_dataframe(filename):
     except Exception as e:
         logger.error(f"Something went wrong: {str(e)}")
         raise e
-
 
 def run(train_date: date, val_date: date, out_path: str):
     logger.info(f"Starting a training run for {train_date}, validating on {val_date}. Will save to {out_path}")
@@ -97,7 +93,7 @@ def run(train_date: date, val_date: date, out_path: str):
 def main(train_date: str, val_date: str, model_save_path: str):
     train_year, train_month = train_date.split("-")
     val_year, val_month = val_date.split("-")
-    model_save_path = model_save_path
+    model_save_path = '../' + model_save_path
 
     train_date = date(int(train_year), int(train_month), 1)
     val_date = date(int(val_year), int(val_month), 1)
@@ -106,3 +102,5 @@ def main(train_date: str, val_date: str, model_save_path: str):
 
 if __name__ == "__main__":
     main()
+
+    

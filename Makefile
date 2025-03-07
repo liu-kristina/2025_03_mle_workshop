@@ -1,0 +1,5 @@
+
+
+
+tests:
+	uv run pytest
