@@ -1,6 +1,7 @@
 import pickle
 from pathlib import Path
 import os
+from duration_pred_serve.features import prepare_features
 from loguru import logger
 
 from flask import Flask, request, jsonify
@@ -13,18 +14,6 @@ logger.info(f"Using model: {MODEL_PATH}")
 with Path(MODEL_PATH).open("rb") as f_in:
     model = pickle.load(f_in)
     
-
-# "feature engineering"
-def prepare_features(ride):
-    assert "PULocationID" in ride
-    assert "DOLocationID" in ride
-    assert "trip_distance" in ride
-    
-    features = dict()
-    features["PULocationID"] = str(ride["PULocationID"])
-    features["DOLocationID"] = str(ride["DOLocationID"])
-    features["trip_distance"] = float(ride["trip_distance"])
-    return features
 
 def predict(features):
     predictions = model.predict(features)
@@ -39,6 +28,10 @@ def predict(features):
 # print(prediction[0])
 
 app = Flask("duration-prediction")
+
+@app.route("/version", methods=["GET"])
+def version():
+    return VERSION
 
 @app.route("/predict", methods=["POST"])
 def predict_endpoint():
